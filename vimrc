@@ -77,3 +77,9 @@ nnoremap <C-l> <C-w>l
 " 5. KÍCH HOẠT THEME
 " ==========================================
 colorscheme dracula
+
+" --- Highlight on Yank (Copy) ---
+augroup HighlightYank
+    autocmd!
+    autocmd TextYankPost * silent! lua vim.highlight.on_yank({higroup="IncSearch", timeout=150})
+augroup END 
