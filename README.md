@@ -73,7 +73,7 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.c
 
 * **SDKMAN (Java):**
 ```bash
-curl -s "[https://get.sdkman.io](https://get.sdkman.io)" | bash
+curl -s "https://get.sdkman.io" | bash
 
 ```
 
