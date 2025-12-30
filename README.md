@@ -48,10 +48,12 @@ git clone [https://github.com/baorlys/dotfiles.git](https://github.com/baorlys/d
 Link the config files from this repo to the home directory:
 
 ```bash
+mkdir -p ~/.config/nvim
+
 ln -sf ~/dotfiles/.zshrc ~/.zshrc
 ln -sf ~/dotfiles/.vimrc ~/.vimrc
 ln -sf ~/dotfiles/.ideavimrc ~/.ideavimrc
-
+ln -sf ~/dotfiles/init.vim ~/.config/nvim/init.vim
 ```
 
 ### 4. Install Dependencies
