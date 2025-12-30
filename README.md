@@ -1,14 +1,14 @@
-
+# 🔧 My Dotfiles & Dev Environment
 
 > Configuration files for my **WSL 2 (Ubuntu 24.04)** development environment.
-> Optimized for **Java Backend Engineering**, **Microservices**, and **Vim** workflows.
+> Optimized for **Java Backend Engineering**, **Microservices**, and **Neovim** workflows.
 
 ## 🛠 Tech Stack
 
 * **OS:** Windows 11 + WSL 2 (Ubuntu 24.04 LTS)
 * **Shell:** Zsh + Oh My Zsh (Theme: `agnoster` / Font: `FiraCode Nerd Font`)
 * **Editors:**
-    * **Vim:** Neovim/Vim with `vim-plug` (Dracula Theme).
+    * **Neovim:** Main editor (configured via `init.vim` & `vim-plug`).
     * **IntelliJ IDEA:** With `IdeaVim` (Vim emulation).
 * **Package Managers:** `apt`, `sdkman` (Java), `nvm` (Node), `snap`.
 * **DevOps:** Docker (Native), Docker Compose, LocalStack, AWS CLI.
@@ -18,62 +18,101 @@
 
 ```text
 ~/dotfiles/
-├── .zshrc        # Zsh configuration (Aliases, Plugins)
-├── .vimrc        # Vim configuration (Plugins, Keymaps)
-├── .ideavimrc    # IntelliJ IdeaVim configuration
-└── README.md     # This file
+├── zshrc          # Zsh configuration (Aliases, Plugins)
+├── vimrc          # Vim/Neovim shared configuration
+├── ideavimrc      # IntelliJ IdeaVim configuration
+└── README.md      # This file
 
 ```
 
+---
+
 ## 🚀 Installation (Fresh Setup)
+
+Follow these steps exactly to avoid errors.
 
 ### 1. Prerequisites
 
-Install `zsh`, `git`, and `curl` on the new machine:
+Install core packages:
 
 ```bash
-sudo apt update && sudo apt install zsh git curl -y
+sudo apt update && sudo apt install zsh git curl neovim -y
 
 ```
 
 ### 2. Clone Repository
 
 ```bash
-git clone [https://github.com/baorlys/dotfiles.git](https://github.com/baorlys/dotfiles.git) ~/dotfiles
+git clone https://github.com/baorlys/dotfiles.git ~/dotfiles
 
 ```
 
-### 3. Create Symlinks (The Magic Step)
+### 3. Install Frameworks & Dependencies (Do this BEFORE linking)
 
-Link the config files from this repo to the home directory:
+**A. Install Oh My Zsh:**
 
 ```bash
-mkdir -p ~/.config/nvim
+sh -c "$(curl -fsSL [https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh](https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh))"
 
-ln -sf ~/dotfiles/zshrc ~/.zshrc
-ln -sf ~/dotfiles/vimrc ~/.vimrc
-ln -sf ~/dotfiles/ideavimrc ~/.ideavimrc
-ln -sf ~/dotfiles/init.vim ~/.config/nvim/init.vim
 ```
 
-### 4. Install Dependencies
+*(Note: If it asks to switch shell, type 'Y'. If it enters a new shell, type `exit` to continue).*
 
-* **Oh My Zsh:**
+**B. Install Zsh Plugins (Fixes "plugin not found" error):**
+
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
 ```
 
+**C. Install Vim-Plug (For Neovim):**
 
-* **Vim Plug:**
 ```bash
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
 ```
 
+**D. Install SDKMAN (Java):**
 
-* **SDKMAN (Java):**
 ```bash
 curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+```
+
+### 4. Create Symlinks (The Magic Step)
+
+Overwrite default configs with my dotfiles:
+
+```bash
+# 1. Prepare Neovim folder
+mkdir -p ~/.config/nvim
+
+# 2. Link Zsh
+rm -f ~/.zshrc
+ln -sf ~/dotfiles/zshrc ~/.zshrc
+
+# 3. Link Neovim (Use vimrc for init.vim)
+rm -f ~/.config/nvim/init.vim
+ln -sf ~/dotfiles/vimrc ~/.config/nvim/init.vim
+
+# 4. Link IntelliJ
+rm -f ~/.ideavimrc
+ln -sf ~/dotfiles/ideavimrc ~/.ideavimrc
+
+```
+
+### 5. Finalize Setup
+
+1. **Install Neovim Plugins:**
+Open terminal, type `nvim`. Ignore errors, press Enter, then type:
+`:PlugInstall`
+Restart Neovim.
+2. **Reload Shell:**
+```bash
+source ~/.zshrc
 
 ```
 
@@ -83,7 +122,7 @@ curl -s "https://get.sdkman.io" | bash
 
 ## ⌨️ Key Mappings (Cheatsheet)
 
-### Vim (`.vimrc`) & IntelliJ (`.ideavimrc`)
+### Vim (`vimrc`) & IntelliJ (`ideavimrc`)
 
 **Leader Key:** `SPACE`
 
@@ -109,6 +148,7 @@ Defined in `.zshrc` for productivity.
 | --- | --- | --- |
 | `update-all` | `apt update... && sdk update...` | Update EVERYTHING (System + Tools) |
 | `zshconfig` | `vim ~/.zshrc` | Edit shell config |
+| `vimconfig` | `vim ~/.config/nvim/init.vim` | Edit vim config |
 | `open` | `explorer.exe .` | Open current folder in Windows Explorer |
 | `myip` | `hostname -I` | Show local IP |
 | `port` | `lsof -i ...` | Check who is using a port (e.g., `port 8080`) |
@@ -145,3 +185,7 @@ Keep the `~` directory clean. Always clone projects here:
 
 > **Author:** Baorlys
 > **Role:** Backend Engineer
+
+```
+
+```
