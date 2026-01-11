@@ -1,147 +1,121 @@
 " ============================================================================
-" IDEA VIM CONFIGURATION
+" Author: Bao Ly
 " ============================================================================
 
-" --- BASIC SETTINGS ---
+" --- BASIC SETUP ---
 let mapleader = " "
 set scrolloff=5
 set incsearch
 set hlsearch
 set ignorecase
 set smartcase
-set showmode
 set number
 set relativenumber
 set clipboard+=unnamed
+set ideajoin
+set ideacopypreprocess
 
-" --- IDEAVIM SPECIFIC SETTINGS ---
-set ideajoin             " Nối dòng thông minh (Smart Join)
-set ideacopypreprocess   " Copy giữ nguyên highlight IDE
-set which-key            " Hiển thị bảng gợi ý phím tắt
-set notimeout            " Chờ phím tắt không giới hạn thời gian
-
-" --- PLUGINS (Built-in) ---
+" Plugins
 set surround
 set commentary
-set argtextobj
 set textobj-entire
 set easymotion
 set highlightedyank
-set NERDTree
+set which-key
+set notimeout
 
-" ============================================================================
-" 1. WINDOWS & TABS MANAGEMENT
-" ============================================================================
-" Di chuyển cửa sổ (Ctrl + h/j/k/l)
+" --- 1. WINDOWS & TABS ---
+" Split Navigation
 nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
-" Chia màn hình
+" Split Creation
 nnoremap <leader>v :action SplitVertically<CR>
 nnoremap <leader>s :action SplitHorizontally<CR>
-nnoremap <leader>w :action HideAllWindows<CR>
 
-"y Tab Navigation
-nnoremap H gT
-nnoremap L gt
+" Tab Navigation
+nnoremap <leader>tc :action CloseContent<CR>
+nnoremap <leader>to :action CloseAllEditorsButActive<CR>
 
-nnoremap <leader>q :action CloseContent<CR>
-nnoremap <leader>qo :action CloseAllEditorsButActive<CR>
+" --- 2. EDITING ---
+" Exit Insert
+inoremap jj <Esc>
+inoremap fd <Esc>
 
-" [NEW] Pin Tab (Ghim tab hiện tại để không bị đóng nhầm)
-nnoremap <leader>pi :action PinActiveTab<CR>
-
-" Project View (NERDTree style)
-nnoremap <leader>e :NERDTreeFocus<CR>
-nnoremap <leader>nf :NERDTreeFind<CR>
-
-" ============================================================================
-" 2. EDITING & REFACTORING
-" ============================================================================
-" Di chuyển dòng (Alt + j/k) - Dùng Native Action
+" Move Lines
 nnoremap <A-j> :action MoveLineDown<CR>
 nnoremap <A-k> :action MoveLineUp<CR>
 vnoremap <A-j> :action MoveLineDown<CR>
 vnoremap <A-k> :action MoveLineUp<CR>
 
-" Rename / Format
-nnoremap <leader>rn :action RenameElement<CR>
-nnoremap <leader>f :action ReformatCode<CR>
-nnoremap <leader>i :action OptimizeImports<CR>
-
-" Paste an toàn
+" Smart Paste
 vnoremap p "_dP
 
-" Thoát nhanh
-inoremap fd <Esc>
-inoremap jj <Esc>
+" Smart Enter (Java God Mode)
+inoremap <S-Enter> <Esc>:action EditorCompleteStatement<CR>a
 
-" ============================================================================
-" 3. RUN / DEBUG / GIT
-" ============================================================================
-nnoremap <leader>r :action Run<CR>
-nnoremap <leader>d :action Debug<CR>
-nnoremap <leader>st :action Stop<CR>
-
-" --- GIT OPERATIONS ---
-" Xem lịch sử file
-nnoremap <leader>gh :action Vcs.ShowTabbedFileHistory<CR>
-" Xem ai code dòng nào (Git Blame/Annotate)
-nnoremap <leader>gb :action Annotate<CR>
-
-" [NEW] Git Rollback (Revert code)
-" Normal mode: Revert file / Visual mode: Revert đoạn code đang chọn
-nnoremap <leader>gr :action Vcs.RollbackChangedLines<CR>
-vnoremap <leader>gr :action Vcs.RollbackChangedLines<CR>
-
-" Nhảy giữa các thay đổi (Hunks)
-nnoremap ]c :action Vcs.Show.NextChangeMarker<CR>
-nnoremap [c :action Vcs.Show.PrevChangeMarker<CR>
-
-" ============================================================================
-" 4. NAVIGATION & SEARCH
-" ============================================================================
-" Goto Definition
+" --- 3. NAVIGATION ---
 nnoremap gd :action GotoDeclaration<CR>
 nnoremap gi :action GotoImplementation<CR>
 nnoremap gu :action FindUsages<CR>
-" File Structure (Mục lục hàm trong file)
-nnoremap gr :action FileStructurePopup<CR>
+" File Structure
+nnoremap <leader>o :action FileStructurePopup<CR>
+" Select file in Project Tree
+nnoremap <leader>e :action SelectInProjectView<CR>
+" Recent Locations
+nnoremap <leader>rl :action RecentLocations<CR>
+" Method Jump
+nnoremap ]m :action MethodDown<CR>
+nnoremap [m :action MethodUp<CR>
 
-" Search Everywhere
-nnoremap <leader>se :action SearchEverywhere<CR>
-" Tắt highlight tìm kiếm
-nnoremap <leader><leader> :nohlsearch<CR>
+nnoremap <C-o> :action Back<CR>
+nnoremap <C-i> :action Forward<CR>
+" --- 4. REFACTORING ---
+nnoremap <leader>rn :action RenameElement<CR>
+nnoremap <leader>rf :action ReformatCode<CR>
+nnoremap <leader>ri :action OptimizeImports<CR>
+nnoremap <leader>. :action ShowIntentionActions<CR>
 
-" EasyMotion
-map <leader>j <Plug>(easymotion-s)
+vnoremap <leader>rv :action IntroduceVariable<CR>
+vnoremap <leader>rm :action ExtractMethod<CR>
+vnoremap <leader>rc :action IntroduceConstant<CR>
+vnoremap <leader>rf :action IntroduceField<CR>
 
-" ============================================================================
-" 5. MULTIPLE CURSORS
-" ============================================================================
-nnoremap <leader>n :action SelectNextOccurrence<CR>
-vnoremap <leader>n :action SelectNextOccurrence<CR>
-nnoremap <leader>p :action UnselectPreviousOccurrence<CR>
-nnoremap <leader>aa :action SelectAllOccurrences<CR>
+" --- 5. DEBUGGING ---
+nnoremap <leader>db :action ToggleLineBreakpoint<CR>
+nnoremap <leader>dr :action Debug<CR>
+nnoremap <leader>di :action StepInto<CR>
+nnoremap <leader>si :action SmartStepInto<CR>
+nnoremap <leader>dj :action StepOver<CR>
+nnoremap <leader>do :action StepOut<CR>
+nnoremap <leader>dc :action Resume<CR>
+nnoremap <leader>de :action EvaluateExpression<CR>
+nnoremap <leader>ds :action TraceCurrentStreamChain<CR>
 
-" ============================================================================
-" 6. BOOKMARKS & ERRORS
-" ============================================================================
-nnoremap <leader>m :action ToggleBookmark<CR>
-nnoremap <leader>M :action ShowBookmarks<CR>
+" --- 6. GIT OPERATIONS ---
+nnoremap <leader>ga :action Annotate<CR>
+nnoremap <leader>gh :action Vcs.ShowTabbedFileHistory<CR>
+nnoremap <leader>gr :action Vcs.RollbackChangedLines<CR>
+nnoremap ]c :action Vcs.Show.NextChangeMarker<CR>
+nnoremap [c :action Vcs.Show.PrevChangeMarker<CR>
 
+" --- 7. MISC ---
+" Clear Highlight
+nnoremap <leader>h :nohlsearch<CR>
+" Parameter Info
+nnoremap <leader>p :action ParameterInfo<CR>
+" Error Navigation
 nnoremap ]e :action GotoNextError<CR>
 nnoremap [e :action GotoPreviousError<CR>
+" Easy Motion
+map s <Plug>(easymotion-s2)
 
-" --- HISTORY NAVIGATION ---
-" Quay lại vị trí con trỏ trước đó (tương đương Ctrl+Alt+Left)
-nnoremap gb :action Back<CR>
-" Đi tới vị trí con trỏ tiếp theo (tương đương Ctrl+Alt+Right)
-nnoremap gf :action Forward<CR>
+" --- 8. APPEARANCE ---
+nnoremap <leader>1 :action ActiveProjectToolWindow<CR>
+nnoremap <leader>2 :action ToggleDistractionFreeMode<CR>
+nnoremap <leader>3 :action TogglePresentationMode<CR>
 
-nnoremap <leader>. :action ShowIntentionActions<CR>
-nnoremap K :action QuickJavaDoc<CR>
-nnoremap <leader>h :action RecentFiles<CR>
-inoremap <S-Enter> <Esc>:action EditorCompleteStatement<CR>a
+" --- 9. TABS ---
+nnoremap <leader>pi :action PinActiveTab<CR>
